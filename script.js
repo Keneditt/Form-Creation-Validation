@@ -12,26 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = getValue('email');
         const password = getValue('password');
         
-        // Validation using array methods
-        const validations = [
-            { 
-                condition: username.length < 3, 
-                message: 'Username must be at least 3 characters long' 
-            },
-            { 
-                condition: !email.includes('@') || !email.includes('.'), 
-                message: 'Email must contain both "@" and "."' 
-            },
-            { 
-                condition: password.length < 8, 
-                message: 'Password must be at least 8 characters long' 
-            }
-        ];
-        
-        // Collect error messages
-        const messages = validations
-            .filter(validation => validation.condition)
-            .map(validation => validation.message);
+        // Create validation messages without using push()
+        const messages = [
+            username.length < 3 ? 'Username must be at least 3 characters long' : null,
+            (!email.includes('@') || !email.includes('.')) ? 'Email must contain both "@" and "."' : null,
+            password.length < 8 ? 'Password must be at least 8 characters long' : null
+        ].filter(message => message !== null);
         
         const isValid = messages.length === 0;
         
