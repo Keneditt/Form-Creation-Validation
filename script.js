@@ -1,41 +1,41 @@
+// script.js
 document.addEventListener('DOMContentLoaded', () => {
-    // Select form and feedback division
     const form = document.getElementById('registration-form');
     const feedbackDiv = document.getElementById('form-feedback');
     
-    // Add form submission handler
-    form.addEventListener('submit', (event) => {
-        // Prevent form submission
+    form.addEventListener('submit', event => {
         event.preventDefault();
         
-        // Retrieve and trim input values
-        const username = document.getElementById('username').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
+        // Get input values using arrow functions
+        const getValue = id => document.getElementById(id).value.trim();
+        const username = getValue('username');
+        const email = getValue('email');
+        const password = getValue('password');
         
-        // Initialize validation variables
-        let isValid = true;
-        const messages = [];
+        // Validation using array methods
+        const validations = [
+            { 
+                condition: username.length < 3, 
+                message: 'Username must be at least 3 characters long' 
+            },
+            { 
+                condition: !email.includes('@') || !email.includes('.'), 
+                message: 'Email must contain both "@" and "."' 
+            },
+            { 
+                condition: password.length < 8, 
+                message: 'Password must be at least 8 characters long' 
+            }
+        ];
         
-        // Validate username (min 3 characters)
-        if (username.length < 3) {
-            isValid = false;
-            messages.push('Username must be at least 3 characters long');
-        }
+        // Collect error messages
+        const messages = validations
+            .filter(validation => validation.condition)
+            .map(validation => validation.message);
         
-        // Validate email (must contain @ and .)
-        if (!email.includes('@') || !email.includes('.')) {
-            isValid = false;
-            messages.push('Email must contain both "@" and "."');
-        }
+        const isValid = messages.length === 0;
         
-        // Validate password (min 8 characters)
-        if (password.length < 8) {
-            isValid = false;
-            messages.push('Password must be at least 8 characters long');
-        }
-        
-        // Display feedback
+        // Display results
         feedbackDiv.style.display = "block";
         
         if (isValid) {
@@ -43,8 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackDiv.style.color = "#28a745";
             feedbackDiv.style.backgroundColor = "#d4edda";
             feedbackDiv.style.border = "1px solid #c3e6cb";
-            
-            // Reset form after successful registration
             form.reset();
         } else {
             feedbackDiv.innerHTML = messages.join('<br>');
